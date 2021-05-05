@@ -3,7 +3,7 @@ import { ApolloProvider, Mutation, Query } from "react-apollo";
 import { client } from "./client";
 import { SEARCH_REPOSITORIES, ADD_STAR, REMOVE_STAR } from "./graphql";
 
-function StarButton({ node }) {
+function StarButton({ node, variables }) {
   const count = node.stargazers.totalCount;
   const show_stars = count === 1 ? "1 star" : `${count} stars`;
   const starred = node.viewerHasStarred;
@@ -19,7 +19,10 @@ function StarButton({ node }) {
   };
 
   return (
-    <Mutation mutation={starred ? REMOVE_STAR : ADD_STAR}>
+    <Mutation
+      mutation={starred ? REMOVE_STAR : ADD_STAR}
+      refetchQueries={[{ query: SEARCH_REPOSITORIES, variables }]}
+    >
       {(addOrRemoveStar) => <StarStatus addOrRemoveStar={addOrRemoveStar} />}
     </Mutation>
   );
@@ -100,7 +103,7 @@ function App() {
                         {node.name}
                       </a>
                       &nbsp;
-                      <StarButton node={node} />
+                      <StarButton node={node} variables={variables} />
                     </li>
                   );
                 })}
