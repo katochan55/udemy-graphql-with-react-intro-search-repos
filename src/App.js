@@ -19,9 +19,13 @@ function App() {
     setVariables({ ...variables, query: e.target.value });
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+  }
+
   return (
     <ApolloProvider client={client}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input value={query} onChange={handleChange} />
       </form>
       <Query query={SEARCH_REPOSITORIES} variables={variables}>
