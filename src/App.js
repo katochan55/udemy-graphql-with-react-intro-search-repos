@@ -5,7 +5,10 @@ import { SEARCH_REPOSITORIES } from "./graphql";
 
 function StarButton({ node }) {
   const count = node.stargazers.totalCount;
-  return <button>{count === 1 ? "1 star" : `${count} stars`}</button>;
+  const show_stars = count === 1 ? "1 star" : `${count} stars`;
+  const starred = node.viewerHasStarred;
+  const show_starred = starred ? "starred" : "-";
+  return <button>{`${show_stars} | ${show_starred}`}</button>;
 }
 
 const PER_PAGE = 5;
