@@ -25,7 +25,23 @@ function App() {
   }
 
   function goNext(search) {
-    setVariables({ ...variables, after: search.pageInfo.endCursor });
+    setVariables({
+      ...variables,
+      first: PER_PAGE,
+      after: search.pageInfo.endCursor,
+      last: null,
+      before: null,
+    });
+  }
+
+  function goPrevious(search) {
+    setVariables({
+      ...variables,
+      first: null,
+      after: null,
+      last: PER_PAGE,
+      before: search.pageInfo.startCursor,
+    });
   }
 
   return (
@@ -65,6 +81,9 @@ function App() {
                   );
                 })}
               </ul>
+              {search.pageInfo.hasPreviousPage ? (
+                <button onClick={() => goPrevious(search)}>Previous</button>
+              ) : null}
               {search.pageInfo.hasNextPage ? (
                 <button onClick={() => goNext(search)}>Next</button>
               ) : null}
