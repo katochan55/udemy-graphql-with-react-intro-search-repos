@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ApolloProvider, Mutation, Query } from "react-apollo";
 import { client } from "./client";
 import { SEARCH_REPOSITORIES, ADD_STAR, REMOVE_STAR } from "./graphql";
@@ -52,19 +52,20 @@ const DEFAULT_VARIABLES = {
   after: null,
   last: null,
   before: null,
-  query: "フロントエンドエンジニア",
+  query: "",
 };
 
 function App() {
   const [variables, setVariables] = useState(DEFAULT_VARIABLES);
   const { first, after, last, before, query } = variables;
 
-  function handleChange(e) {
-    setVariables({ ...variables, query: e.target.value });
-  }
-
   function handleSubmit(e) {
     e.preventDefault();
+
+    setVariables({
+      ...variables,
+      query: textInput.current.value,
+    });
   }
 
   function goNext(search) {
@@ -87,10 +88,13 @@ function App() {
     });
   }
 
+  const textInput = useRef(null);
+
   return (
     <ApolloProvider client={client}>
       <form onSubmit={handleSubmit}>
-        <input value={query} onChange={handleChange} />
+        <input ref={textInput} />
+        <input type="submit" value="Submit" />
       </form>
       <Query query={SEARCH_REPOSITORIES} variables={variables}>
         {({ loading, error, data }) => {
